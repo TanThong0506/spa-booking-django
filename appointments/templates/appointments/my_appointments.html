@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Lịch hẹn của tôi</title>
+</head>
+<body>
+
+<h1>Lịch hẹn của tôi</h1>
+
+{% for a in appointments %}
+    <div style="border:1px solid black; margin:10px; padding:10px;">
+        <h3>{{ a.service.name }}</h3>
+        <p>Ngày: {{ a.appointment_date }}</p>
+        <p>Giờ: {{ a.appointment_time }}</p>
+        <p>Trạng thái: {{ a.get_status_display }}</p>
+
+        {% if a.status != 'cancelled' and a.status != 'completed' %}
+    <a href="/appointments/cancel/{{ a.id }}/">
+        <button>Hủy lịch</button>
+    </a>
+{% endif %}
+    </div>
+{% empty %}
+    <p>Chưa có lịch hẹn nào</p>
+{% endfor %}
+
+
+</body>
+</html>
