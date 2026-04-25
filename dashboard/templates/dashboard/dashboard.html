@@ -1,51 +1,42 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Thống kê hệ thống</title>
-</head>
-<body>
+{% extends 'base.html' %}
 
-<div style="background:#333; padding:10px;">
-    <a href="/services/" style="color:white; margin-right:20px;">Trang chủ</a>
-    <a href="/appointments/my/" style="color:white; margin-right:20px;">Lịch của tôi</a>
-    <a href="/dashboard/" style="color:white; margin-right:20px;">Thống kê</a>
-    <a href="/admin/" style="color:white;">Quản trị</a>
-</div>
+{% block title %}Thống kê hệ thống{% endblock %}
 
-<h1>Thống kê hệ thống</h1>
+{% block content %}
 
-<div style="display:flex; gap:20px; margin:20px;">
+<h1 class="page-title">Thống kê hệ thống</h1>
+<p class="page-subtitle">Tổng quan tình hình đặt lịch và trạng thái xử lý.</p>
 
-    <div style="border:1px solid #ccc; padding:20px; width:200px; border-radius:10px;">
+<div class="stats-grid">
+    <div class="stat-card">
         <h3>Tổng lịch hẹn</h3>
-        <h1>{{ total }}</h1>
+        <p>{{ total }}</p>
     </div>
 
-    <div style="border:1px solid #ccc; padding:20px; width:200px; border-radius:10px;">
+    <div class="stat-card">
         <h3>Chờ xác nhận</h3>
-        <h1>{{ pending }}</h1>
+        <p>{{ pending }}</p>
     </div>
 
-    <div style="border:1px solid #ccc; padding:20px; width:200px; border-radius:10px;">
+    <div class="stat-card">
         <h3>Đã xác nhận</h3>
-        <h1>{{ confirmed }}</h1>
+        <p>{{ confirmed }}</p>
     </div>
 
-    <div style="border:1px solid #ccc; padding:20px; width:200px; border-radius:10px;">
+    <div class="stat-card">
         <h3>Hoàn thành</h3>
-        <h1>{{ completed }}</h1>
+        <p>{{ completed }}</p>
     </div>
 
-    <div style="border:1px solid #ccc; padding:20px; width:200px; border-radius:10px;">
+    <div class="stat-card">
         <h3>Đã hủy</h3>
-        <h1>{{ cancelled }}</h1>
+        <p>{{ cancelled }}</p>
     </div>
-
 </div>
 
-<h2>Danh sách lịch hẹn</h2>
+<h2 style="margin-bottom: 16px;">Danh sách lịch hẹn</h2>
 
-<table border="1" cellpadding="10" cellspacing="0">
+<table>
     <tr>
         <th>Khách hàng</th>
         <th>Dịch vụ</th>
@@ -64,18 +55,17 @@
         <td>{{ a.get_status_display }}</td>
         <td>
             {% if a.status == 'cancelled' %}
-        Không thể thao tác
-    {% elif a.status == 'completed' %}
-        Đã hoàn thành
-    {% else %}
-        <a href="/dashboard/update-status/{{ a.id }}/confirmed/">Xác nhận</a> |
-        <a href="/dashboard/update-status/{{ a.id }}/completed/">Hoàn thành</a> |
-        <a href="/dashboard/update-status/{{ a.id }}/cancelled/">Hủy</a>
-    {% endif %}
+                Không thể thao tác
+            {% elif a.status == 'completed' %}
+                Đã hoàn thành
+            {% else %}
+                <a href="/dashboard/update-status/{{ a.id }}/confirmed/">Xác nhận</a> |
+                <a href="/dashboard/update-status/{{ a.id }}/completed/">Hoàn thành</a> |
+                <a href="/dashboard/update-status/{{ a.id }}/cancelled/">Hủy</a>
+            {% endif %}
         </td>
     </tr>
     {% endfor %}
 </table>
 
-</body>
-</html>
+{% endblock %}

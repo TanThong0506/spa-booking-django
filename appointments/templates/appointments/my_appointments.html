@@ -1,29 +1,28 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Lịch hẹn của tôi</title>
-</head>
-<body>
+{% extends 'base.html' %}
 
-<h1>Lịch hẹn của tôi</h1>
+{% block title %}Lịch của tôi{% endblock %}
+
+{% block content %}
+
+<h1 class="page-title">Lịch hẹn của tôi</h1>
+<p class="page-subtitle">Theo dõi trạng thái các lịch hẹn bạn đã đặt.</p>
 
 {% for a in appointments %}
-    <div style="border:1px solid black; margin:10px; padding:10px;">
-        <h3>{{ a.service.name }}</h3>
-        <p>Ngày: {{ a.appointment_date }}</p>
-        <p>Giờ: {{ a.appointment_time }}</p>
-        <p>Trạng thái: {{ a.get_status_display }}</p>
+    <div class="card">
+        <h2>{{ a.service.name }}</h2>
+        <p><strong>Ngày:</strong> {{ a.appointment_date }}</p>
+        <p><strong>Giờ:</strong> {{ a.appointment_time }}</p>
+        <p><strong>Trạng thái:</strong> {{ a.get_status_display }}</p>
 
         {% if a.status != 'cancelled' and a.status != 'completed' %}
-    <a href="/appointments/cancel/{{ a.id }}/">
-        <button>Hủy lịch</button>
-    </a>
-{% endif %}
+            <a href="/appointments/cancel/{{ a.id }}/" class="btn-danger">Hủy lịch</a>
+        {% endif %}
     </div>
 {% empty %}
-    <p>Chưa có lịch hẹn nào</p>
+    <div class="card">
+        <p>Bạn chưa có lịch hẹn nào.</p>
+        <a href="/services/" class="btn-primary">Đặt lịch ngay</a>
+    </div>
 {% endfor %}
 
-
-</body>
-</html>
+{% endblock %}

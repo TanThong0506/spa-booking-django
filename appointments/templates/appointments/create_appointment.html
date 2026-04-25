@@ -1,17 +1,18 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Đặt lịch</title>
-</head>
-<body>
+{% extends 'base.html' %}
 
-<h1>Đặt lịch dịch vụ</h1>
+{% block title %}Đặt lịch{% endblock %}
 
-<form method="post">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <button type="submit">Đặt lịch</button>
-</form>
+{% block content %}
 
-</body>
-</html>
+<h1 class="page-title">Đặt lịch dịch vụ</h1>
+<p class="page-subtitle">Chọn ngày giờ phù hợp để chúng tôi phục vụ bạn tốt nhất.</p>
+
+<div class="form-box">
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit" class="btn-primary">Xác nhận đặt lịch</button>
+    </form>
+</div>
+
+{% endblock %}

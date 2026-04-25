@@ -1,0 +1,46 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <title>{% block title %}Spa Booking{% endblock %}</title>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+</head>
+<body>
+
+<nav class="navbar">
+    <a href="/services/" class="logo">Serenity Spa</a>
+
+    <div class="nav-links">
+        <a href="/services/">Dịch vụ</a>
+        <a href="/appointments/my/">Lịch của tôi</a>
+
+        {% if user.is_staff %}
+            <a href="/dashboard/">Thống kê</a>
+        {% endif %}
+
+        {% if user.is_authenticated %}
+            <span>Xin chào, {{ user.username }}</span>
+            <form method="post" action="/accounts/logout/" style="display:inline;">
+    {% csrf_token %}
+   <form method="post" action="/user/logout/" style="display:inline;">
+    {% csrf_token %}
+    <button type="submit" style="background:none; border:none; color:white; cursor:pointer; font-weight:500;">
+        Đăng xuất
+    </button>
+</form>
+</form>
+        {% else %}
+            <a href="/user/login/">Đăng nhập</a>
+            <a href="/user/register/">Đăng ký</a>
+        {% endif %}
+    </div>
+</nav>
+
+<main class="container">
+    {% block content %}
+    {% endblock %}
+</main>
+
+</body>
+</html>

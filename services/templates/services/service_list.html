@@ -1,45 +1,25 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Danh sách dịch vụ</title>
-</head>
-<body>
+{% extends 'base.html' %}
 
-<!-- MENU -->
-<div style="background:#333; padding:10px;">
-    <a href="/services/" style="color:white; margin-right:20px;">Trang chủ</a>
-    <a href="/appointments/my/" style="color:white; margin-right:20px;">Lịch của tôi</a>
+{% block title %}Danh sách dịch vụ{% endblock %}
 
+{% block content %}
 
-    {% if user.is_staff %}
-    <a href="/dashboard/" style="color:white; margin-right:20px;">Thống kê</a>
-    {% endif %}
+<h1 class="page-title">Dịch vụ chăm sóc</h1>
+<p class="page-subtitle">Chọn dịch vụ phù hợp và đặt lịch nhanh chóng.</p>
 
-    {% if user.is_authenticated %}
-        <span style="color:white; margin-right:20px;">Xin chào, {{ user.username }}</span>
-        <a href="/accounts/logout/" style="color:white;">Đăng xuất</a>
-    {% else %}
-        <a href="/accounts/login/" style="color:white; margin-right:20px;">Đăng nhập</a>
-        <a href="/accounts/register/" style="color:white;">Đăng ký</a>
-    {% endif %}
+<div class="service-grid">
+    {% for service in services %}
+        <div class="service-card">
+            <h2>{{ service.name }}</h2>
+            <p>{{ service.description }}</p>
+            <p class="service-price">{{ service.price }} VND</p>
+            <p class="service-duration">Thời gian: {{ service.duration }} phút</p>
+
+            <a class="btn-primary" href="/appointments/create/?service_id={{ service.id }}">
+                Đặt lịch ngay
+            </a>
+        </div>
+    {% endfor %}
 </div>
 
-<h1>Danh sách dịch vụ</h1>
-
-{% for service in services %}
-    <div style="border:1px solid #ccc; padding:15px; margin:15px; border-radius:10px;">
-        <h2>{{ service.name }}</h2>
-        <p>Giá: {{ service.price }} VND</p>
-        <p>Thời gian: {{ service.duration }} phút</p>
-        <p>{{ service.description }}</p>
-
-        <a href="/appointments/create/?service_id={{ service.id }}">
-            <button style="padding:8px 15px; background:green; color:white; border:none;">
-                Đặt lịch
-            </button>
-        </a>
-    </div>
-{% endfor %}
-
-</body>
-</html>
+{% endblock %}

@@ -1,17 +1,29 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Đăng nhập</title>
-</head>
-<body>
+{% extends 'base.html' %}
 
-<h1>Đăng nhập</h1>
+{% block title %}Đăng nhập{% endblock %}
 
-<form method="post">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <button type="submit">Đăng nhập</button>
-</form>
+{% block content %}
 
-</body>
-</html>
+<h1 class="page-title">Đăng nhập</h1>
+<p class="page-subtitle">Đăng nhập để đặt lịch và theo dõi lịch hẹn của bạn.</p>
+
+<div class="form-box">
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit" class="btn-primary">Đăng nhập</button>
+    </form>
+
+    <hr style="margin: 24px 0;">
+
+    <a href="/accounts/google/login/" class="btn-primary" style="width:100%; text-align:center;">
+        Đăng nhập bằng Google
+    </a>
+
+    <p style="margin-top: 18px;">
+        Chưa có tài khoản?
+        <a href="/user/register/">Đăng ký ngay</a>
+    </p>
+</div>
+
+{% endblock %}
