@@ -4,8 +4,13 @@
 
 {% block content %}
 
-<h1 class="page-title">Thống kê hệ thống</h1>
-<p class="page-subtitle">Tổng quan tình hình đặt lịch và trạng thái xử lý.</p>
+{% if user.is_staff %}
+    <h1 class="page-title">Bảng quản lý hệ thống</h1>
+    <p class="page-subtitle">Theo dõi toàn bộ lịch hẹn và tình trạng xử lý.</p>
+{% else %}
+    <h1 class="page-title">Trang nhân viên</h1>
+    <p class="page-subtitle">Xem và xử lý các lịch hẹn của khách hàng.</p>
+{% endif %}
 
 <div class="stats-grid">
     <div class="stat-card">
@@ -34,10 +39,11 @@
     </div>
 </div>
 
-<h2 style="margin-bottom: 16px;">Danh sách lịch hẹn</h2>
+<h2 style="margin-bottom: 16px;">Danh sách lịch hẹn cần xử lý</h2>
 
 <table>
     <tr>
+        <th>Nhân viên</th>
         <th>Khách hàng</th>
         <th>Dịch vụ</th>
         <th>Ngày</th>
@@ -48,21 +54,36 @@
 
     {% for a in appointments %}
     <tr>
-        <td>{{ a.customer.username }}</td>
+        <td>
+            {% if a.employee %}
+                {{ a.employee.first_name }} {{ a.employee.last_name }}
+            {% else %}
+                Chưa phân công
+            {% endif %}
+        </td>
+        <td>{{ a.customer.first_name }} {{ a.customer.last_name }}</td>
         <td>{{ a.service.name }}</td>
         <td>{{ a.appointment_date }}</td>
         <td>{{ a.appointment_time }}</td>
         <td>{{ a.get_status_display }}</td>
         <td>
-            {% if a.status == 'cancelled' %}
-                Không thể thao tác
+           {% if a.status == 'cancelled' %}
+            <span class="status-muted">Không thể thao tác</span>
             {% elif a.status == 'completed' %}
-                Đã hoàn thành
+            <span class="status-success">Đã hoàn thành</span>
             {% else %}
-                <a href="/dashboard/update-status/{{ a.id }}/confirmed/">Xác nhận</a> |
-                <a href="/dashboard/update-status/{{ a.id }}/completed/">Hoàn thành</a> |
-                <a href="/dashboard/update-status/{{ a.id }}/cancelled/">Hủy</a>
+            <select class="action-select" onchange="if(this.value) window.location.href=this.value;">
+            <option value="">Chọn thao tác</option>
+
+            {% if not a.employee %}
+                <option value="/dashboard/assign/{{ a.id }}/">Nhận xử lý</option>
             {% endif %}
+
+            <option value="/dashboard/update-status/{{ a.id }}/confirmed/">Xác nhận</option>
+            <option value="/dashboard/update-status/{{ a.id }}/completed/">Hoàn thành</option>
+            <option value="/dashboard/update-status/{{ a.id }}/cancelled/">Hủy lịch</option>
+        </select>
+    {% endif %}
         </td>
     </tr>
     {% endfor %}

@@ -3,7 +3,7 @@ from appointments.models import Appointment
 
 
 def dashboard(request):
-    if not request.user.is_staff:
+    if not is_employee_or_admin(request.user):
         return redirect('service_list')
 
     total = Appointment.objects.count()
@@ -25,17 +25,39 @@ def dashboard(request):
 
     return render(request, 'dashboard/dashboard.html', context)
 
+def is_employee_or_admin(user):
+    if user.is_staff:
+        return True
+
+    if hasattr(user, 'profile') and user.profile.role == 'employee':
+        return True
+
+    return False
 
 def update_appointment_status(request, appointment_id, status):
-    if not request.user.is_staff:
+    if not is_employee_or_admin(request.user):
         return redirect('service_list')
 
     appointment = get_object_or_404(Appointment, id=appointment_id)
 
     if appointment.status in ['cancelled', 'completed']:
         return redirect('dashboard')
-
+    
+    if status in ['confirmed', 'completed'] and appointment.employee is None:
+        appointment.employee = request.user
     appointment.status = status
     appointment.save()
+
+    return redirect('dashboard')
+
+def assign_to_me(request, appointment_id):
+    if not is_employee_or_admin(request.user):
+        return redirect('service_list')
+
+    appointment = get_object_or_404(Appointment, id=appointment_id)
+
+    if appointment.status not in ['cancelled', 'completed']:
+        appointment.employee = request.user
+        appointment.save()
 
     return redirect('dashboard')

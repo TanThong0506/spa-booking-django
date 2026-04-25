@@ -11,16 +11,35 @@
 <nav class="navbar">
     <a href="/services/" class="logo">Serenity Spa</a>
 
+<form method="get" action="/services/" class="search-form" id="searchForm">
+    <div class="search-box">
+        <input 
+            type="text" 
+            name="q" 
+            id="searchInput"
+            placeholder="Tìm dịch vụ..." 
+            value="{{ request.GET.q }}"
+            autocomplete="off"
+        >
+
+        <div class="search-history" id="searchHistory"></div>
+    </div>
+
+    <button type="submit">Tìm</button>
+</form>
+
     <div class="nav-links">
         <a href="/services/">Dịch vụ</a>
         <a href="/appointments/my/">Lịch của tôi</a>
 
-        {% if user.is_staff %}
-            <a href="/dashboard/">Thống kê</a>
+       {% if user.is_staff %}
+            <a href="/dashboard/">Quản lý</a>
+            {% elif user.profile.role == 'employee' %}
+            <a href="/dashboard/">Trang nhân viên</a>
         {% endif %}
 
         {% if user.is_authenticated %}
-            <span>Xin chào, {{ user.username }}</span>
+            <span>{{ user.first_name }} {{ user.last_name }}</span>
             <form method="post" action="/accounts/logout/" style="display:inline;">
     {% csrf_token %}
    <form method="post" action="/user/logout/" style="display:inline;">
@@ -44,3 +63,58 @@
 
 </body>
 </html>
+
+<script>
+const searchForm = document.getElementById('searchForm');
+const searchInput = document.getElementById('searchInput');
+const searchHistory = document.getElementById('searchHistory');
+
+function showSuggestions(items) {
+    searchHistory.innerHTML = '';
+
+    if (items.length === 0) {
+        searchHistory.style.display = 'none';
+        return;
+    }
+
+    items.forEach(item => {
+        const div = document.createElement('div');
+        div.className = 'search-history-item';
+        div.textContent = item;
+
+        div.onclick = function () {
+            searchInput.value = item;
+            searchForm.submit();
+        };
+
+        searchHistory.appendChild(div);
+    });
+
+    searchHistory.style.display = 'block';
+}
+
+searchInput.addEventListener('input', function () {
+    const keyword = searchInput.value.trim();
+
+    if (keyword.length === 0) {
+        searchHistory.style.display = 'none';
+        return;
+    }
+
+    fetch(`/services/suggestions/?q=${keyword}`)
+        .then(response => response.json())
+        .then(data => {
+            showSuggestions(data);
+        });
+});
+
+searchForm.addEventListener('submit', function () {
+    searchHistory.style.display = 'none';
+});
+
+document.addEventListener('click', function (e) {
+    if (!searchForm.contains(e.target)) {
+        searchHistory.style.display = 'none';
+    }
+});
+</script>

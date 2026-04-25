@@ -52,7 +52,7 @@ body {
 
 .service-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    grid-template-columns: repeat(3, 1fr);
     gap: 24px;
 }
 
@@ -180,4 +180,131 @@ th, td {
 th {
     background: #8e54e9;
     color: white;
+}
+
+.hero {
+    min-height: 420px;
+    border-radius: 28px;
+    background:
+        linear-gradient(rgba(142, 84, 233, 0.55), rgba(255, 126, 179, 0.55)),
+        url("https://images.unsplash.com/photo-1540555700478-4be289fbecef?auto=format&fit=crop&w=1400&q=80");
+    background-size: cover;
+    background-position: center;
+    display: flex;
+    align-items: center;
+    padding: 60px;
+    margin-bottom: 50px;
+    color: white;
+    box-shadow: 0 18px 35px rgba(0, 0, 0, 0.12);
+}
+
+.hero-content {
+    max-width: 620px;
+}
+
+.hero-content h1 {
+    font-size: 48px;
+    margin-bottom: 18px;
+    line-height: 1.15;
+}
+
+.hero-content p {
+    font-size: 18px;
+    margin-bottom: 28px;
+}
+
+.service-card {
+    overflow: hidden;
+    padding: 0;
+}
+
+.service-img {
+    width: 100%;
+    height: 160px;
+    object-fit: cover;
+    display: block;
+}
+
+.service-body {
+    padding: 18px;
+}
+
+.service-card h2 {
+    font-size: 22px;
+}
+
+.service-card p {
+    font-size: 15px;
+}
+
+.search-form {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.search-form input {
+    width: 260px;
+    padding: 9px 14px;
+    border-radius: 999px;
+    border: none;
+    outline: none;
+}
+
+.search-form button {
+    padding: 9px 16px;
+    border-radius: 999px;
+    border: none;
+    background: white;
+    color: #8e54e9;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.search-box {
+    position: relative;
+}
+
+.search-history {
+    display: none;
+    position: absolute;
+    top: 44px;
+    left: 0;
+    width: 260px;
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+    overflow: hidden;
+    z-index: 1000;
+}
+
+.search-history-item {
+    padding: 12px 14px;
+    cursor: pointer;
+    color: #333;
+}
+
+.search-history-item:hover {
+    background: #f3eaff;
+}
+
+.action-select {
+    padding: 8px 12px;
+    border-radius: 999px;
+    border: 1px solid #ddd;
+    background: white;
+    color: #333;
+    font-weight: 500;
+    outline: none;
+    cursor: pointer;
+}
+
+.status-muted {
+    color: #999;
+    font-weight: 500;
+}
+
+.status-success {
+    color: #22a06b;
+    font-weight: 600;
 }

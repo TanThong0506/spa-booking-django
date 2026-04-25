@@ -1,25 +1,55 @@
 {% extends 'base.html' %}
+{% load currency_filters %}
 
-{% block title %}Danh sách dịch vụ{% endblock %}
+{% block title %}Dịch vụ{% endblock %}
 
 {% block content %}
 
-<h1 class="page-title">Dịch vụ chăm sóc</h1>
-<p class="page-subtitle">Chọn dịch vụ phù hợp và đặt lịch nhanh chóng.</p>
+{% if not keyword %}
+<section class="hero">
+    <div class="hero-content">
+        <h1>Thư giãn và chăm sóc bản thân mỗi ngày</h1>
+        <p>Đặt lịch nhanh chóng với các dịch vụ spa, làm đẹp và chăm sóc sức khỏe chuyên nghiệp.</p>
+        <a href="#services" class="btn-primary">Khám phá dịch vụ</a>
+    </div>
+</section>
+{% endif %}
 
-<div class="service-grid">
-    {% for service in services %}
-        <div class="service-card">
-            <h2>{{ service.name }}</h2>
-            <p>{{ service.description }}</p>
-            <p class="service-price">{{ service.price }} VND</p>
-            <p class="service-duration">Thời gian: {{ service.duration }} phút</p>
+<section id="services">
+    {% if keyword %}
+        <h1 class="page-title">Kết quả tìm kiếm: "{{ keyword }}"</h1>
+        <p class="page-subtitle">Các dịch vụ phù hợp với từ khóa bạn vừa tìm.</p>
+    {% else %}
+        <h1 class="page-title">Dịch vụ nổi bật</h1>
+        <p class="page-subtitle">Lựa chọn dịch vụ phù hợp và đặt lịch chỉ trong vài bước.</p>
+    {% endif %}
 
-            <a class="btn-primary" href="/appointments/create/?service_id={{ service.id }}">
-                Đặt lịch ngay
-            </a>
-        </div>
-    {% endfor %}
-</div>
+    <div class="service-grid">
+        {% for service in services %}
+            <div class="service-card">
+                {% if service.image %}
+                    <img src="{{ service.image.url }}" class="service-img">
+                {% endif %}
+
+                <div class="service-body">
+                    <h2>{{ service.name }}</h2>
+                    <p>{{ service.description }}</p>
+                    <p class="service-price">{{ service.price|vnd }}</p>
+                    <p class="service-duration">Thời gian: {{ service.duration }} phút</p>
+
+                    <a class="btn-primary" href="/appointments/create/?service_id={{ service.id }}">
+                        Đặt lịch ngay
+                    </a>
+                </div>
+            </div>
+        {% empty %}
+            <div class="card">
+                <h2>Không tìm thấy dịch vụ phù hợp</h2>
+                <p>Vui lòng thử lại với từ khóa khác.</p>
+                <a href="/services/" class="btn-primary">Xem tất cả dịch vụ</a>
+            </div>
+        {% endfor %}
+    </div>
+</section>
 
 {% endblock %}
