@@ -4,20 +4,22 @@
 
 {% block content %}
 
-<h1 class="page-title">Đăng ký tài khoản</h1>
-<p class="page-subtitle">Tạo tài khoản để đặt lịch dịch vụ nhanh chóng.</p>
+<section class="auth-page">
+    <div class="auth-card">
+        <h1 class="page-title">Đăng ký tài khoản</h1>
+        <p class="page-subtitle">Tạo tài khoản để đặt lịch dịch vụ nhanh chóng.</p>
 
-<div class="form-box">
-    <form method="post">
-        {% csrf_token %}
-        {{ form.as_p }}
-        <button type="submit" class="btn-primary">Đăng ký</button>
-    </form>
+        <form method="post">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <button type="submit" class="btn-primary" style="width:100%;">Đăng ký</button>
+        </form>
 
-    <p style="margin-top: 18px;">
-        Đã có tài khoản?
-        <a href="/accounts/login/">Đăng nhập</a>
-    </p>
-</div>
+        <p style="margin-top: 18px; text-align:center;">
+            Đã có tài khoản?
+            <a href="/user/login/">Đăng nhập</a>
+        </p>
+    </div>
+</section>
 
 {% endblock %}

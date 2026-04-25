@@ -103,3 +103,24 @@ class AppointmentForm(forms.ModelForm):
             raise forms.ValidationError("Chỉ được đặt lịch từ 08:00 đến 18:00.")
 
         return appointment_time
+    
+    def clean(self):
+        cleaned_data = super().clean()
+
+        service = cleaned_data.get('service')
+        appointment_date = cleaned_data.get('appointment_date')
+        appointment_time = cleaned_data.get('appointment_time')
+
+        if service and appointment_date and appointment_time:
+            exists = Appointment.objects.filter(
+                service=service,
+                appointment_date=appointment_date,
+                appointment_time=appointment_time
+            ).exclude(status='cancelled').exists()
+
+            if exists:
+                raise forms.ValidationError(
+                    "Khung giờ này đã có người đặt. Vui lòng chọn thời gian khác."
+                )
+
+        return cleaned_data

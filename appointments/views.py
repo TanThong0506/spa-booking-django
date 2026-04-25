@@ -1,6 +1,7 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
 from .forms import AppointmentForm
+from django.contrib import messages
 
 @login_required
 def my_appointments(request):
@@ -16,6 +17,7 @@ def create_appointment(request):
             appointment = form.save(commit=False)
             appointment.customer = request.user
             appointment.save()
+            messages.success(request, "Đặt lịch thành công. Vui lòng chờ nhân viên xác nhận.")
             return redirect('my_appointments')
     else:
         initial_data = {}
@@ -32,4 +34,5 @@ def cancel_appointment(request, appointment_id):
     appointment = request.user.appointment_set.get(id=appointment_id)
     appointment.status = 'cancelled'
     appointment.save()
+    messages.success(request, "Hủy lịch thành công.")
     return redirect('my_appointments')

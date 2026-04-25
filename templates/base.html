@@ -6,6 +6,45 @@
     <title>{% block title %}Spa Booking{% endblock %}</title>
     <link rel="stylesheet" href="{% static 'css/style.css' %}">
 </head>
+
+<script>
+let currentSlide = 0;
+
+function showSlide(index) {
+    const slides = document.querySelectorAll('.hero-slide');
+    const dots = document.querySelectorAll('.dot');
+
+    if (slides.length === 0) return;
+
+    slides[currentSlide].classList.remove('active');
+    if (dots.length > 0) {
+        dots[currentSlide].classList.remove('active');
+    }
+
+    currentSlide = (index + slides.length) % slides.length;
+
+    slides[currentSlide].classList.add('active');
+    if (dots.length > 0) {
+        dots[currentSlide].classList.add('active');
+    }
+}
+
+function changeSlide(step) {
+    showSlide(currentSlide + step);
+}
+
+function goToSlide(index) {
+    showSlide(index);
+}
+
+setInterval(function () {
+    const slides = document.querySelectorAll('.hero-slide');
+    if (slides.length > 0) {
+        changeSlide(1);
+    }
+}, 4000);
+</script>
+
 <body>
 
 <nav class="navbar">
@@ -57,6 +96,15 @@
 </nav>
 
 <main class="container">
+    {% if messages %}
+        <div class="messages">
+            {% for message in messages %}
+                <div class="alert alert-{{ message.tags }}">
+                    {{ message }}
+                </div>
+            {% endfor %}
+        </div>
+    {% endif %}
     {% block content %}
     {% endblock %}
 </main>

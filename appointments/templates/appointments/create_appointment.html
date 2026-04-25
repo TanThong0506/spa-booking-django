@@ -4,15 +4,17 @@
 
 {% block content %}
 
-<h1 class="page-title">Đặt lịch dịch vụ</h1>
-<p class="page-subtitle">Chọn ngày giờ phù hợp để chúng tôi phục vụ bạn tốt nhất.</p>
+<section class="auth-page">
+    <div class="auth-card">
+        <h1 class="page-title">Đặt lịch dịch vụ</h1>
+        <p class="page-subtitle">Chọn ngày giờ phù hợp để chúng tôi phục vụ bạn tốt nhất.</p>
 
-<div class="form-box">
-    <form method="post">
-        {% csrf_token %}
-        {{ form.as_p }}
-        <button type="submit" class="btn-primary">Xác nhận đặt lịch</button>
-    </form>
-</div>
+        <form method="post">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <button type="submit" class="btn-primary" style="width:100%;">Xác nhận đặt lịch</button>
+        </form>
+    </div>
+</section>
 
 {% endblock %}
