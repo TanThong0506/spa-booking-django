@@ -4,6 +4,8 @@
 
 {% block content %}
 
+{% load currency_filters %}
+
 {% if user.is_staff %}
     <h1 class="page-title">Bảng quản lý hệ thống</h1>
     <p class="page-subtitle">Theo dõi toàn bộ lịch hẹn và tình trạng xử lý.</p>
@@ -12,7 +14,7 @@
     <p class="page-subtitle">Xem và xử lý các lịch hẹn của khách hàng.</p>
 {% endif %}
 
-<div class="stats-grid">
+<div class="stats-grid" id="revenue">
     <div class="stat-card">
         <h3>Tổng lịch hẹn</h3>
         <p>{{ total }}</p>
@@ -36,6 +38,12 @@
     <div class="stat-card">
         <h3>Đã hủy</h3>
         <p>{{ cancelled }}</p>
+    </div>
+    
+
+    <div class="stat-card">
+        <h3>Lịch hôm nay</h3>
+        <p>{{ today_appointments }}</p>
     </div>
 </div>
 
@@ -74,14 +82,19 @@
             {% else %}
             <select class="action-select" onchange="if(this.value) window.location.href=this.value;">
             <option value="">Chọn thao tác</option>
+                {% if not a.employee %}
+                        <option value="/dashboard/assign/{{ a.id }}/">Nhận xử lý</option>
+                    {% endif %}
 
-            {% if not a.employee %}
-                <option value="/dashboard/assign/{{ a.id }}/">Nhận xử lý</option>
-            {% endif %}
+                    {% if a.status == 'pending' %}
+                        <option value="/dashboard/update-status/{{ a.id }}/confirmed/">Xác nhận</option>
+                    {% endif %}
 
-            <option value="/dashboard/update-status/{{ a.id }}/confirmed/">Xác nhận</option>
-            <option value="/dashboard/update-status/{{ a.id }}/completed/">Hoàn thành</option>
-            <option value="/dashboard/update-status/{{ a.id }}/cancelled/">Hủy lịch</option>
+                    {% if a.status == 'confirmed' %}
+                        <option value="/dashboard/update-status/{{ a.id }}/completed/">Hoàn thành</option>
+                    {% endif %}
+
+                    <option value="/dashboard/update-status/{{ a.id }}/cancelled/">Hủy lịch</option>
         </select>
     {% endif %}
         </td>

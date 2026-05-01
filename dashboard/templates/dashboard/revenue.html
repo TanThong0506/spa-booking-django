@@ -1,0 +1,89 @@
+{% extends 'base.html' %}
+{% load currency_filters %}
+
+{% block title %}Doanh thu{% endblock %}
+
+{% block content %}
+
+<h1 class="page-title">Thống kê doanh thu</h1>
+<p class="page-subtitle">Xem doanh thu theo ngày và theo tháng.</p>
+
+<form method="get" class="filter-form">
+    <div>
+        <label>Chọn ngày</label>
+        <input type="date" name="date" value="{{ selected_date|date:'Y-m-d' }}">
+    </div>
+
+    <div>
+        <label>Chọn tháng</label>
+        <input type="month" name="month" value="{{ selected_month }}">
+    </div>
+
+    <button type="submit" class="btn-primary">Xem doanh thu</button>
+</form>
+
+<div class="stats-grid" style="margin-top: 30px;">
+    <div class="stat-card">
+        <h3>Doanh thu ngày</h3>
+        <p>{{ day_revenue|vnd }}</p>
+    </div>
+
+    <div class="stat-card">
+        <h3>Doanh thu tháng</h3>
+        <p>{{ month_revenue|vnd }}</p>
+    </div>
+</div>
+
+<h2 style="margin-top: 40px;">Lịch hoàn thành trong ngày</h2>
+
+<table>
+    <tr>
+        <th>Khách hàng</th>
+        <th>Dịch vụ</th>
+        <th>Ngày</th>
+        <th>Giờ</th>
+        <th>Giá</th>
+    </tr>
+
+    {% for a in day_appointments %}
+    <tr>
+        <td>{{ a.customer_name }}</td>
+        <td>{{ a.service.name }}</td>
+        <td>{{ a.appointment_date }}</td>
+        <td>{{ a.appointment_time }}</td>
+        <td>{{ a.service.price|vnd }}</td>
+    </tr>
+    {% empty %}
+    <tr>
+        <td colspan="5">Không có lịch hoàn thành trong ngày này.</td>
+    </tr>
+    {% endfor %}
+</table>
+
+<h2 style="margin-top: 40px;">Lịch hoàn thành trong tháng</h2>
+
+<table>
+    <tr>
+        <th>Khách hàng</th>
+        <th>Dịch vụ</th>
+        <th>Ngày</th>
+        <th>Giờ</th>
+        <th>Giá</th>
+    </tr>
+
+    {% for a in month_appointments %}
+    <tr>
+        <td>{{ a.customer_name }}</td>
+        <td>{{ a.service.name }}</td>
+        <td>{{ a.appointment_date }}</td>
+        <td>{{ a.appointment_time }}</td>
+        <td>{{ a.service.price|vnd }}</td>
+    </tr>
+    {% empty %}
+    <tr>
+        <td colspan="5">Không có lịch hoàn thành trong tháng này.</td>
+    </tr>
+    {% endfor %}
+</table>
+
+{% endblock %}

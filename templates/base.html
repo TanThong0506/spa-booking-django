@@ -73,8 +73,10 @@ setInterval(function () {
 
        {% if user.is_staff %}
             <a href="/dashboard/">Quản lý</a>
-            {% elif user.profile.role == 'employee' %}
+            <a href="/dashboard/revenue/">Doanh thu</a>
+        {% elif user.profile.role == 'employee' %}
             <a href="/dashboard/">Trang nhân viên</a>
+            <a href="/dashboard/revenue/">Doanh thu</a>
         {% endif %}
 
         {% if user.is_authenticated %}
