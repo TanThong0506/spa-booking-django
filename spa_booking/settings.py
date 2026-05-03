@@ -139,7 +139,7 @@ STATIC_URL = 'static/'
 MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'
 
-LOGIN_REDIRECT_URL = '/services/'
+LOGIN_REDIRECT_URL = '/'
 LOGOUT_REDIRECT_URL = '/user/login/'
 LOGIN_URL = '/user/login/'
 
@@ -155,7 +155,7 @@ AUTHENTICATION_BACKENDS = [
     'allauth.account.auth_backends.AuthenticationBackend',
 ]
 
-LOGIN_REDIRECT_URL = '/services/'
+LOGIN_REDIRECT_URL = '/'
 LOGOUT_REDIRECT_URL = '/user/login/'
 
 SOCIALACCOUNT_LOGIN_ON_GET = True

@@ -6,29 +6,45 @@
 {% block content %}
 
 {% if not keyword %}
-<section class="hero-slider">
-    <div class="hero-slide active" style="background-image: linear-gradient(rgba(142,84,233,0.45), rgba(255,126,179,0.45)), url('https://images.unsplash.com/photo-1540555700478-4be289fbecef?auto=format&fit=crop&w=1600&q=80');">
-        <div class="hero-content">
-            <h1>Thư giãn và chăm sóc bản thân mỗi ngày</h1>
-            <p>Đặt lịch nhanh chóng với các dịch vụ spa, làm đẹp và chăm sóc sức khỏe chuyên nghiệp.</p>
-            <a href="#services" class="btn-primary">Khám phá dịch vụ</a>
+<section class="service-hero-slider" id="serviceHeroSlider">
+
+    <div class="service-hero-slide active">
+        <div class="service-hero-content">
+            <p class="luxury-label">SERENITY SPA SERVICES</p>
+            <h1>Dịch vụ chăm sóc sắc đẹp và thư giãn chuyên nghiệp</h1>
+            <p>Lựa chọn liệu trình phù hợp, đặt lịch nhanh chóng và tận hưởng trải nghiệm spa tinh tế.</p>
         </div>
     </div>
 
-    <div class="hero-slide" style="background-image: linear-gradient(rgba(142,84,233,0.45), rgba(255,126,179,0.45)), url('https://images.unsplash.com/photo-1515377905703-c4788e51af15?auto=format&fit=crop&w=1600&q=80');">
-        <div class="hero-content">
-            <h1>Không gian thư giãn chuẩn spa</h1>
-            <p>Tận hưởng dịch vụ chăm sóc da, massage và phục hồi năng lượng.</p>
-            <a href="#services" class="btn-primary">Đặt lịch ngay</a>
+    <div class="service-hero-slide">
+        <div class="service-hero-content">
+            <p class="luxury-label">SKIN CARE</p>
+            <h1>Chăm sóc da chuyên sâu</h1>
+            <p>Làm sạch, phục hồi và nuôi dưỡng làn da khỏe đẹp tự nhiên.</p>
         </div>
     </div>
 
-    <div class="hero-slide" style="background-image: linear-gradient(rgba(142,84,233,0.45), rgba(255,126,179,0.45)), url('https://images.unsplash.com/photo-1570172619644-dfd03ed5d881?auto=format&fit=crop&w=1600&q=80');">
-        <div class="hero-content">
-            <h1>Chăm sóc làn da chuyên sâu</h1>
-            <p>Các liệu trình phù hợp giúp làn da sạch khỏe và rạng rỡ hơn.</p>
-            <a href="#services" class="btn-primary">Xem dịch vụ</a>
+    <div class="service-hero-slide">
+        <div class="service-hero-content">
+            <p class="luxury-label">RELAX MASSAGE</p>
+            <h1>Massage thư giãn toàn thân</h1>
+            <p>Giảm căng thẳng, phục hồi năng lượng và cân bằng cơ thể.</p>
         </div>
+    </div>
+
+    <div class="service-hero-slide">
+        <div class="service-hero-content">
+            <p class="luxury-label">BEAUTY WELLNESS</p>
+            <h1>Liệu trình làm đẹp cao cấp</h1>
+            <p>Trải nghiệm không gian spa sang trọng cùng dịch vụ tận tâm.</p>
+        </div>
+    </div>
+
+    <div class="service-hero-dots">
+        <span onclick="goServiceSlide(0)" class="service-dot active"></span>
+        <span onclick="goServiceSlide(1)" class="service-dot"></span>
+        <span onclick="goServiceSlide(2)" class="service-dot"></span>
+        <span onclick="goServiceSlide(3)" class="service-dot"></span>
     </div>
 
 </section>

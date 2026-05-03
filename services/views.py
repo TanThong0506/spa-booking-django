@@ -24,3 +24,9 @@ def service_suggestions(request):
     ).values_list('name', flat=True)[:8]
 
     return JsonResponse(list(services), safe=False)
+
+def home(request):
+    services = Service.objects.filter(is_active=True)[:6]
+    return render(request, 'services/home.html', {
+        'services': services
+    })

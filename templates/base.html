@@ -5,6 +5,7 @@
     <meta charset="UTF-8">
     <title>{% block title %}Spa Booking{% endblock %}</title>
     <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <link rel="icon" type="image/png" href="{% static 'images/logo3.png' %}">
 </head>
 
 <script>
@@ -48,52 +49,49 @@ setInterval(function () {
 <body>
 
 <nav class="navbar">
-    <a href="/services/" class="logo">Serenity Spa</a>
-
-<form method="get" action="/services/" class="search-form" id="searchForm">
-    <div class="search-box">
-        <input 
-            type="text" 
-            name="q" 
-            id="searchInput"
-            placeholder="Tìm dịch vụ..." 
-            value="{{ request.GET.q }}"
-            autocomplete="off"
-        >
-
-        <div class="search-history" id="searchHistory"></div>
-    </div>
-
-    <button type="submit">Tìm</button>
-</form>
+    <a href="/" class="logo">
+        <img src="{% static 'images/logo.png' %}" alt="Diana Spa">
+    </a>
 
     <div class="nav-links">
+        <a href="/">Trang chủ</a>
         <a href="/services/">Dịch vụ</a>
         <a href="/appointments/my/">Lịch của tôi</a>
 
-       {% if user.is_staff %}
+        {% if user.is_staff %}
             <a href="/dashboard/">Quản lý</a>
             <a href="/dashboard/revenue/">Doanh thu</a>
         {% elif user.profile.role == 'employee' %}
             <a href="/dashboard/">Trang nhân viên</a>
-            <a href="/dashboard/revenue/">Doanh thu</a>
         {% endif %}
+    </div>
+
+    <div class="nav-actions">
+        <div class="nav-search">
+            <button type="button" class="search-toggle" onclick="toggleSearchBox()">🔍</button>
+
+            <form method="get" action="/services/" class="search-dropdown" id="searchForm">
+                <div class="search-box">
+                    <input type="text" name="q" id="searchInput" placeholder="Tìm kiếm..." value="{{ request.GET.q }}" autocomplete="off">
+                    <div class="search-history" id="searchHistory"></div>
+                </div>
+                <button type="submit" class="search-submit">🔍</button>
+            </form>
+        </div>
+
+        <a href="/appointments/create/" class="nav-cta">ĐẶT NGAY</a>
 
         {% if user.is_authenticated %}
-            <span>{{ user.first_name }} {{ user.last_name }}</span>
-            <form method="post" action="/accounts/logout/" style="display:inline;">
-    {% csrf_token %}
-   <form method="post" action="/user/logout/" style="display:inline;">
-    {% csrf_token %}
-    <button type="submit" style="background:none; border:none; color:white; cursor:pointer; font-weight:500;">
-        Đăng xuất
-    </button>
-</form>
-</form>
+            <form method="post" action="/accounts/logout/" class="logout-form">
+                {% csrf_token %}
+                <button type="submit" class="logout-btn">Đăng xuất</button>
+            </form>
         {% else %}
-            <a href="/user/login/">Đăng nhập</a>
-            <a href="/user/register/">Đăng ký</a>
-        {% endif %}
+        {% if request.path != '/user/login/' and request.path != '/user/register/' %}
+        <a href="/user/login/" class="auth-link">Đăng nhập</a>
+        <a href="/user/register/" class="auth-link">Đăng ký</a>
+    {% endif %}
+{% endif %}
     </div>
 </nav>
 
@@ -167,4 +165,95 @@ document.addEventListener('click', function (e) {
         searchHistory.style.display = 'none';
     }
 });
+
+function toggleSearchBox() {
+    const box = document.getElementById('searchForm');
+    box.classList.toggle('active');
+
+    const input = document.getElementById('searchInput');
+    if (box.classList.contains('active')) {
+        setTimeout(() => input.focus(), 100);
+    }
+}
+
+document.addEventListener('click', function(e) {
+    const navSearch = document.querySelector('.nav-search');
+
+    if (navSearch && !navSearch.contains(e.target)) {
+        document.getElementById('searchForm')?.classList.remove('active');
+    }
+});
+</script>
+
+<script>
+let currentSlide = 0;
+const slides = document.querySelectorAll('.hero-slide');
+const dots = document.querySelectorAll('.dot');
+
+function showSlide(index) {
+    slides.forEach(s => s.classList.remove('active'));
+    dots.forEach(d => d.classList.remove('active'));
+
+    slides[index].classList.add('active');
+    dots[index].classList.add('active');
+}
+
+function goSlide(index) {
+    currentSlide = index;
+    showSlide(currentSlide);
+}
+
+setInterval(() => {
+    currentSlide = (currentSlide + 1) % slides.length;
+    showSlide(currentSlide);
+}, 4000);
+
+/* kéo tay */
+let startX = 0;
+
+document.getElementById('heroSlider').addEventListener('touchstart', e => {
+    startX = e.touches[0].clientX;
+});
+
+document.getElementById('heroSlider').addEventListener('touchend', e => {
+    let endX = e.changedTouches[0].clientX;
+
+    if (startX - endX > 50) {
+        currentSlide = (currentSlide + 1) % slides.length;
+    } else if (endX - startX > 50) {
+        currentSlide = (currentSlide - 1 + slides.length) % slides.length;
+    }
+
+    showSlide(currentSlide);
+});
+</script>
+
+<script>
+let currentServiceSlide = 0;
+
+function showServiceSlide(index) {
+    const slides = document.querySelectorAll('.service-hero-slide');
+    const dots = document.querySelectorAll('.service-dot');
+
+    if (slides.length === 0) return;
+
+    slides[currentServiceSlide].classList.remove('active');
+    dots[currentServiceSlide].classList.remove('active');
+
+    currentServiceSlide = (index + slides.length) % slides.length;
+
+    slides[currentServiceSlide].classList.add('active');
+    dots[currentServiceSlide].classList.add('active');
+}
+
+function goServiceSlide(index) {
+    showServiceSlide(index);
+}
+
+setInterval(function () {
+    const slides = document.querySelectorAll('.service-hero-slide');
+    if (slides.length > 0) {
+        showServiceSlide(currentServiceSlide + 1);
+    }
+}, 4000);
 </script>

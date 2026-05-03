@@ -1,0 +1,119 @@
+{% extends 'base.html' %}
+{% load currency_filters %}
+
+{% block title %}Trang chủ{% endblock %}
+
+{% block content %}
+
+<section class="luxury-hero">
+    <section class="luxury-hero slider" id="heroSlider">
+
+    <div class="hero-slide active">
+        <div class="luxury-overlay">
+            <p class="luxury-label">SERENITY SPA WELLNESS CENTER</p>
+            <h1>Không gian chăm sóc sức khỏe và sắc đẹp chuẩn luxury</h1>
+            <p>Trải nghiệm liệu trình thư giãn, chăm sóc da và phục hồi năng lượng.</p>
+            <div class="hero-actions">
+                <a href="/services/" class="btn-primary">Khám phá dịch vụ</a>
+                <a href="/services/" class="btn-outline">Đặt lịch ngay</a>
+            </div>
+        </div>
+    </div>
+
+    <div class="hero-slide">
+        <div class="luxury-overlay">
+            <p class="luxury-label">RELAX & HEAL</p>
+            <h1>Thư giãn cơ thể – Tái tạo năng lượng</h1>
+            <p>Massage chuyên sâu giúp bạn phục hồi sau những ngày làm việc căng thẳng.</p>
+            <div class="hero-actions">
+                <a href="/services/" class="btn-primary">Xem dịch vụ</a>
+            </div>
+        </div>
+    </div>
+
+    <div class="hero-slide">
+        <div class="luxury-overlay">
+            <p class="luxury-label">SKIN CARE</p>
+            <h1>Làn da khỏe đẹp từ bên trong</h1>
+            <p>Các liệu trình chăm sóc da chuyên nghiệp chuẩn spa cao cấp.</p>
+            <div class="hero-actions">
+                <a href="/services/" class="btn-primary">Đặt lịch ngay</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- dots -->
+    <div class="hero-dots">
+        <span onclick="goSlide(0)" class="dot active"></span>
+        <span onclick="goSlide(1)" class="dot"></span>
+        <span onclick="goSlide(2)" class="dot"></span>
+    </div>
+
+</section>
+</section>
+
+<section class="luxury-section">
+    <p class="section-label">BEST SELLER</p>
+    <h2>Dịch vụ được yêu thích</h2>
+
+    <div class="service-grid">
+        {% for service in services %}
+        <div class="service-card">
+            {% if service.image %}
+                <img src="{{ service.image.url }}" class="service-img">
+            {% endif %}
+            <div class="service-body">
+                <h2>{{ service.name }}</h2>
+                <p>{{ service.description }}</p>
+                <p class="service-price">{{ service.price|vnd }}</p>
+                <p>Thời gian: {{ service.duration }} phút</p>
+                <a class="btn-primary" href="/appointments/create/?service_id={{ service.id }}">Đặt lịch</a>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</section>
+
+<section class="about-luxury">
+    <div>
+        <p class="section-label">VỀ CHÚNG TÔI</p>
+        <h2>Serenity Spa - Nơi thư giãn và tái tạo năng lượng</h2>
+        <p>
+            Serenity Spa mang đến trải nghiệm chăm sóc sắc đẹp và sức khỏe toàn diện,
+            kết hợp không gian tinh tế, dịch vụ chuyên nghiệp và quy trình đặt lịch tiện lợi.
+        </p>
+        <div class="why-grid">
+            <div><strong>5★</strong><span>Trải nghiệm cao cấp</span></div>
+            <div><strong>24/7</strong><span>Đặt lịch trực tuyến</span></div>
+            <div><strong>100%</strong><span>Dịch vụ rõ ràng</span></div>
+        </div>
+    </div>
+</section>
+
+<section class="why-section">
+    <p class="section-label">VÌ SAO CHỌN CHÚNG TÔI</p>
+    <h2>Trải nghiệm spa chuyên nghiệp</h2>
+
+    <div class="why-cards">
+        <div class="why-card">
+            <h3>Không gian thư giãn</h3>
+            <p>Thiết kế nhẹ nhàng, sang trọng, tạo cảm giác riêng tư và thoải mái.</p>
+        </div>
+        <div class="why-card">
+            <h3>Đội ngũ tận tâm</h3>
+            <p>Nhân viên tiếp nhận, xác nhận và xử lý lịch hẹn nhanh chóng.</p>
+        </div>
+        <div class="why-card">
+            <h3>Đặt lịch dễ dàng</h3>
+            <p>Khách hàng có thể đặt lịch, xem lịch và hủy lịch trực tuyến.</p>
+        </div>
+    </div>
+</section>
+
+<section class="contact-luxury">
+    <h2>Sẵn sàng trải nghiệm Serenity Spa?</h2>
+    <p>Đặt lịch ngay hôm nay để tận hưởng dịch vụ chăm sóc chuyên nghiệp.</p>
+    <a href="/services/" class="btn-primary">Đặt lịch ngay</a>
+</section>
+
+{% endblock %}
