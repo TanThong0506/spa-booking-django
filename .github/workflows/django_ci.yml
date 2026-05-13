@@ -1,70 +1,172 @@
-name: Spa Booking CI
-
+name: Spa Booking CI/CD Pipeline
+ 
+# ✅ Chạy tự động khi push lên bất kỳ branch nào
 on:
   push:
-    branches: [ "main", "master" ]
+    branches: ["**"]
   pull_request:
-    branches: [ "main", "master" ]
-
+    branches: ["main", "master"]
+ 
 jobs:
-  # 1. Giai đoạn Lint: Kiểm tra lỗi trình bày code
+ 
+  # ─────────────────────────────────────────
+  # BƯỚC 1: LINT — Kiểm tra chất lượng code
+  # ─────────────────────────────────────────
   lint:
+    name: 🔍 Lint (flake8 + isort)
     runs-on: ubuntu-latest
+ 
     steps:
-      - uses: actions/checkout@v4
-      - name: Set up Python
+      - name: Checkout code
+        uses: actions/checkout@v4
+ 
+      - name: Set up Python 3.12
         uses: actions/setup-python@v5
         with:
-          python-version: '3.12'
-      - name: Install flake8
-        run: pip install flake8
-      - name: Run Lint check
-        run: flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics
-
-  # 2. Giai đoạn Test: Chạy các bài kiểm tra logic
+          python-version: "3.12"
+ 
+      - name: Install lint tools
+        run: |
+          pip install flake8 isort
+ 
+      # ❌ Fail nếu có lỗi cú pháp nghiêm trọng (F-errors, E9xx)
+      - name: Run flake8 (lỗi nghiêm trọng)
+        run: |
+          flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics
+ 
+      # ⚠️ Cảnh báo lỗi style (không fail pipeline)
+      - name: Run flake8 (style warnings)
+        run: |
+          flake8 . --count --max-line-length=120 --statistics --exit-zero
+ 
+      # ❌ Fail nếu import chưa được sắp xếp đúng
+      - name: Check import order (isort)
+        run: |
+          isort . --check-only --diff
+ 
+  # ─────────────────────────────────────────
+  # BƯỚC 2: TEST — Chạy unit tests Django
+  # ─────────────────────────────────────────
   test:
-    needs: lint
+    name: 🧪 Test (Django + MySQL)
     runs-on: ubuntu-latest
+    needs: lint  # ✅ Chỉ chạy nếu lint pass
+ 
     services:
-      # Khởi tạo MySQL vì dự án dùng database này 
       mysql:
         image: mysql:8.0
         env:
           MYSQL_DATABASE: spa_booking_db
+          MYSQL_ROOT_PASSWORD: ""
           MYSQL_ALLOW_EMPTY_PASSWORD: yes
         ports:
           - 3306:3306
+        options: >-
+          --health-cmd="mysqladmin ping"
+          --health-interval=10s
+          --health-timeout=5s
+          --health-retries=5
+ 
     steps:
-      - uses: actions/checkout@v4
-      - name: Set up Python
+      - name: Checkout code
+        uses: actions/checkout@v4
+ 
+      - name: Set up Python 3.12
         uses: actions/setup-python@v5
         with:
-          python-version: '3.12'
-      - name: Install Dependencies
+          python-version: "3.12"
+ 
+      - name: Cache pip packages
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/pip
+          key: ${{ runner.os }}-pip-${{ hashFiles('requirements.txt') }}
+          restore-keys: |
+            ${{ runner.os }}-pip-
+ 
+      - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
           pip install -r requirements.txt
-      - name: Run Django Tests
+ 
+      - name: Wait for MySQL ready
+        run: |
+          until mysqladmin ping -h 127.0.0.1 --silent; do
+            echo "Waiting for MySQL..."
+            sleep 2
+          done
+ 
+      # ❌ Fail ngay nếu có test nào fail
+      - name: Run Django tests
         env:
+          SECRET_KEY: "django-insecure-ci-test-key-only"
+          DEBUG: "True"
+          ALLOWED_HOSTS: "127.0.0.1,localhost"
           DB_NAME: spa_booking_db
           DB_USER: root
           DB_PASSWORD: ""
           DB_HOST: 127.0.0.1
           DB_PORT: 3306
         run: |
-          python manage.py test
-
-  # 3. Giai đoạn Build: Kiểm tra khả năng đóng gói
+          python manage.py test --verbosity=2
+ 
+  # ─────────────────────────────────────────
+  # BƯỚC 3: BUILD — Kiểm tra ứng dụng chạy được
+  # ─────────────────────────────────────────
   build:
-    needs: test
+    name: 🏗️ Build (collectstatic + check)
     runs-on: ubuntu-latest
+    needs: test  # ✅ Chỉ chạy nếu test pass
+ 
     steps:
-      - uses: actions/checkout@v4
-      - name: Set up Python
+      - name: Checkout code
+        uses: actions/checkout@v4
+ 
+      - name: Set up Python 3.12
         uses: actions/setup-python@v5
         with:
-          python-version: '3.12'
-      - name: Install requirements
-        run: pip install -r requirements.txt
-      - name: Check Static Files
-        run: python manage.py collectstatic --noinput
+          python-version: "3.12"
+ 
+      - name: Cache pip packages
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/pip
+          key: ${{ runner.os }}-pip-${{ hashFiles('requirements.txt') }}
+          restore-keys: |
+            ${{ runner.os }}-pip-
+ 
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+ 
+      # ❌ Fail nếu Django phát hiện lỗi cấu hình
+      - name: Django system check
+        env:
+          SECRET_KEY: "django-insecure-ci-build-key-only"
+          DEBUG: "True"
+          ALLOWED_HOSTS: "127.0.0.1,localhost"
+          DB_NAME: ":memory:"
+          DB_USER: ""
+          DB_PASSWORD: ""
+          DB_HOST: ""
+          DB_PORT: ""
+        run: |
+          python manage.py check
+ 
+      # ❌ Fail nếu collectstatic lỗi (thiếu file, cấu hình sai)
+      - name: Collect static files
+        env:
+          SECRET_KEY: "django-insecure-ci-build-key-only"
+          DEBUG: "False"
+          ALLOWED_HOSTS: "127.0.0.1,localhost"
+          DB_NAME: spa_booking_db
+          DB_USER: root
+          DB_PASSWORD: ""
+          DB_HOST: 127.0.0.1
+          DB_PORT: 3306
+        run: |
+          python manage.py collectstatic --noinput
+ 
+      - name: ✅ Build successful
+        run: echo "Pipeline hoàn thành! Lint ✓ Test ✓ Build ✓"
