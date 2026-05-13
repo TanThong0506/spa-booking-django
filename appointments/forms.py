@@ -1,8 +1,9 @@
+from datetime import time
+
 from django import forms
 from django.utils import timezone
-from datetime import time
-from .models import Appointment
 
+from .models import Appointment
 
 TIME_CHOICES = [
     ('08:00', '08:00'),

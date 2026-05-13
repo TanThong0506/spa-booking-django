@@ -1,12 +1,17 @@
-from django.shortcuts import render
-from .models import Service
 from django.http import JsonResponse
-from rest_framework import viewsets, status
+from django.shortcuts import render
+from rest_framework import status, viewsets
 from rest_framework.decorators import action
-from rest_framework.response import Response
-from rest_framework.permissions import IsAuthenticatedOrReadOnly, IsAdminUser
 from rest_framework.exceptions import PermissionDenied
-from .serializers import ServiceSerializer, ServiceDetailSerializer, ServiceListSerializer
+from rest_framework.permissions import IsAdminUser, IsAuthenticatedOrReadOnly
+from rest_framework.response import Response
+
+from .models import Service
+from .serializers import (
+    ServiceDetailSerializer,
+    ServiceListSerializer,
+    ServiceSerializer,
+)
 
 
 def service_list(request):

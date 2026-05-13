@@ -1,11 +1,12 @@
-from django.shortcuts import render, redirect
-from .forms import RegisterForm
-from rest_framework import viewsets, status
+from django.shortcuts import redirect, render
+from rest_framework import status, viewsets
 from rest_framework.decorators import action
+from rest_framework.permissions import IsAdminUser, IsAuthenticated
 from rest_framework.response import Response
-from rest_framework.permissions import IsAuthenticated, IsAdminUser
+
+from .forms import RegisterForm
 from .models import Profile
-from .serializers import ProfileSerializer, ProfileDetailSerializer
+from .serializers import ProfileDetailSerializer, ProfileSerializer
 
 
 def register(request):

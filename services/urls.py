@@ -1,5 +1,5 @@
 from django.urls import path
-from .views import service_list
+
 from .views import service_list, service_suggestions
 
 urlpatterns = [
