@@ -102,7 +102,7 @@ DATABASES = {
         'USER': os.getenv('DB_USER', 'root'),
         'PASSWORD': os.getenv('DB_PASSWORD', ''),
         'HOST': os.getenv('DB_HOST', '127.0.0.1'),
-        'PORT': os.getenv('DB_PORT', '3307'),
+        'PORT': os.getenv('DB_PORT', '3306'),
         'OPTIONS': {
             'charset': 'utf8mb4',
         },
@@ -295,3 +295,6 @@ SPECTACULAR_SETTINGS = {
         {'url': 'http://127.0.0.1:8000', 'description': 'Local'},
     ],
 }
+
+# Giới hạn dung lượng file upload là 5MB để tránh treo Server (SRE Optimization)
+DATA_UPLOAD_MAX_MEMORY_SIZE = 5242880
