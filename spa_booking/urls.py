@@ -24,6 +24,14 @@ from spa_booking.views import health_check
 urlpatterns = [
     path('admin/', admin.site.urls),
 
+    # Health endpoints (support both with and without trailing slash)
+    path('api/health', health_check, name='health_check_no_slash'),
+    path('api/health/', health_check, name='health_check'),
+
+    # API Endpoints
+    path('api/', include('spa_booking.api_urls')),
+    path('api-auth/', include('rest_framework.urls')),
+
     path('services/', include('services.urls')),
     path('appointments/', include('appointments.urls')),
     path('dashboard/', include('dashboard.urls')),
@@ -31,6 +39,5 @@ urlpatterns = [
     path('user/', include('accounts.urls')),
     path('accounts/', include('allauth.urls')),
     path('', home, name='home'),
-    path('api/health/', health_check, name='health_check'),
 ]
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

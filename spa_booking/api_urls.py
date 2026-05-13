@@ -1,0 +1,34 @@
+"""
+API URL Configuration for Spa Booking
+"""
+from django.urls import path, include
+from rest_framework.routers import DefaultRouter
+from rest_framework.authtoken.views import obtain_auth_token
+from drf_spectacular.views import SpectacularAPIView, SpectacularRedocView, SpectacularSwaggerView
+
+# Import ViewSets
+from accounts.views import ProfileViewSet
+from services.views import ServiceViewSet
+from appointments.views import AppointmentViewSet
+
+# Create router and register ViewSets
+router = DefaultRouter()
+router.register(r'profiles', ProfileViewSet, basename='profile')
+router.register(r'services', ServiceViewSet, basename='service')
+router.register(r'appointments', AppointmentViewSet, basename='appointment')
+
+# API URL patterns
+api_urlpatterns = [
+    # API Documentation
+    path('docs/schema/', SpectacularAPIView.as_view(), name='schema'),
+    path('docs/swagger/', SpectacularSwaggerView.as_view(url_name='schema'), name='swagger-ui'),
+    path('docs/redoc/', SpectacularRedocView.as_view(url_name='schema'), name='redoc'),
+    
+    # Authentication
+    path('auth/token/', obtain_auth_token, name='api_token_auth'),
+    
+    # ViewSets
+    path('', include(router.urls)),
+]
+
+urlpatterns = api_urlpatterns
