@@ -34,6 +34,7 @@ ALLOWED_HOSTS = os.getenv(
 # Application definition
 
 INSTALLED_APPS = [
+    'jazzmin',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -94,7 +95,7 @@ DATABASES = {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': os.getenv('DB_NAME', 'spa_booking_db'),
         'USER': os.getenv('DB_USER', 'root'),
-        'PASSWORD': os.getenv('', ''),
+        'PASSWORD': os.getenv('DB_PASSWORD', ''),
         'HOST': os.getenv('DB_HOST', '127.0.0.1'),
         'PORT': os.getenv('DB_PORT', '3307'),
         'OPTIONS': {
@@ -138,6 +139,7 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/6.0/howto/static-files/
 
 STATIC_URL = 'static/'
+STATIC_ROOT = BASE_DIR / 'staticfiles'
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'
@@ -177,4 +179,67 @@ LOGGING = {
         'handlers': ['console'],
         'level': 'INFO',
     },
+}
+
+# Jazzmin Admin Configuration
+JAZZMIN_SETTINGS = {
+    "site_header": "Spa Booking Admin",
+    "site_title": "Spa Management",
+    "brand": "🧖 Spa Booking",
+    "logo_alt": "Spa Booking Logo",
+    "welcome_sign": "Welcome to Spa Booking Management System",
+    "copyright": "Spa Booking © 2026",
+    "search_model": "auth.User",
+    "user_avatar": None,
+    
+    # Top Navigation Bar
+    "topmenu_links": [
+        {"name": "Home", "url": "admin:index", "permissions": ["auth.add_user"]},
+        {"name": "Profile", "url": "admin:auth_user_change", "new_window": False, "model": "auth.User"},
+    ],
+
+    # Side Menu
+    "show_sidebar": True,
+    "navigation_expanded": True,
+    "hide_apps": [],
+    "hide_models": [],
+
+    # Model List Page
+    "order_with_respect_to": [
+        "auth",
+        "accounts",
+        "services",
+        "appointments",
+        "dashboard",
+    ],
+
+    # Icons
+    "icons": {
+        "auth": "fas fa-users",
+        "auth.user": "fas fa-user",
+        "auth.Group": "fas fa-users",
+        "accounts.Profile": "fas fa-user-circle",
+        "services.Service": "fas fa-spa",
+        "appointments.Appointment": "fas fa-calendar-check",
+        "dashboard": "fas fa-chart-line",
+    },
+
+    # UI Customizations
+    "default_icon_parents": "fas fa-chevron-circle-right",
+    "default_icon_children": "fas fa-circle",
+
+    # Related Modal
+    "related_modal_active": True,
+
+    # Tabbed inlines
+    "tabbed_inlines": True,
+
+    # Collapsed inlines
+    "collapsed_inlines": [],
+
+    # Show changeform submit button location
+    "show_form_bottom_submit_button": True,
+
+    # Environment name
+    "environment": os.getenv('ENVIRONMENT', 'development'),
 }
