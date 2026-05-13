@@ -296,6 +296,5 @@ SPECTACULAR_SETTINGS = {
     ],
 }
 
-# Giới hạn dung lượng file upload là 5MB để tránh treo Server (SRE Optimization )
+# Giới hạn dung lượng file upload là 5MB để tránh treo Server (SRE Optimization)
 DATA_UPLOAD_MAX_MEMORY_SIZE = 5242880
-ALLOWED_HOSTS = ['127.0.0.1', 'localhost', '192.168.1.xxx']
