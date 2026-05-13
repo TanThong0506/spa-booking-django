@@ -1,18 +1,23 @@
-from django.shortcuts import render, redirect
-from django.contrib.auth.decorators import login_required
-from .forms import AppointmentForm
-from django.contrib import messages
-from rest_framework import viewsets, status
-from rest_framework.decorators import action
-from rest_framework.response import Response
-from rest_framework.permissions import IsAuthenticated, IsAdminUser
-from rest_framework.exceptions import PermissionDenied
-from django.db.models import Q
 from datetime import datetime, timedelta
+
+from django.contrib import messages
+from django.contrib.auth.decorators import login_required
+from django.db.models import Q
+from django.shortcuts import redirect, render
+from rest_framework import status, viewsets
+from rest_framework.decorators import action
+from rest_framework.exceptions import PermissionDenied
+from rest_framework.permissions import IsAdminUser, IsAuthenticated
+from rest_framework.response import Response
+
+from .forms import AppointmentForm
 from .models import Appointment
 from .serializers import (
-    AppointmentSerializer, AppointmentListSerializer, AppointmentStatisticsSerializer
+    AppointmentListSerializer,
+    AppointmentSerializer,
+    AppointmentStatisticsSerializer,
 )
+
 
 @login_required
 def my_appointments(request):

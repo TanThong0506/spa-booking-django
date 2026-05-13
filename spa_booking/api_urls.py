@@ -1,15 +1,19 @@
 """
 API URL Configuration for Spa Booking
 """
-from django.urls import path, include
-from rest_framework.routers import DefaultRouter
+from django.urls import include, path
+from drf_spectacular.views import (
+    SpectacularAPIView,
+    SpectacularRedocView,
+    SpectacularSwaggerView,
+)
 from rest_framework.authtoken.views import obtain_auth_token
-from drf_spectacular.views import SpectacularAPIView, SpectacularRedocView, SpectacularSwaggerView
+from rest_framework.routers import DefaultRouter
 
 # Import ViewSets
 from accounts.views import ProfileViewSet
-from services.views import ServiceViewSet
 from appointments.views import AppointmentViewSet
+from services.views import ServiceViewSet
 
 # Create router and register ViewSets
 router = DefaultRouter()

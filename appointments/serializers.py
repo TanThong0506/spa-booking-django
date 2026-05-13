@@ -1,8 +1,10 @@
+from django.contrib.auth.models import User
 from rest_framework import serializers
-from .models import Appointment
+
 from services.models import Service
 from services.serializers import ServiceSerializer
-from django.contrib.auth.models import User
+
+from .models import Appointment
 
 
 class UserMinimalSerializer(serializers.ModelSerializer):
