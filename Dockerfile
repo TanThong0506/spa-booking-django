@@ -1,5 +1,5 @@
 # Sử dụng Python bản ổn định
-FROM python:3.10-slim
+FROM python:3.12-slim
 
 # Cài đặt các công cụ cần thiết cho MySQL và build
 RUN apt-get update && apt-get install -y \
