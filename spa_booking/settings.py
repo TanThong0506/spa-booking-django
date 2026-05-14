@@ -37,14 +37,17 @@ SECRET_KEY = os.getenv('SECRET_KEY', 'django-insecure-dev-key')
 
 DEBUG = env_bool('DEBUG', False)
 
-ALLOWED_HOSTS = (
-    "127.0.0.1",
-    "localhost",
-    "spa-booking-django.onrender.com"
-)
-    
+# settings.py
 
-CSRF_TRUSTED_ORIGINS = env_list('CSRF_TRUSTED_ORIGINS', 'http://127.0.0.1,http://localhost')
+# Cho phép đọc từ biến môi trường, mặc định là localhost
+ALLOWED_HOSTS = env_list('ALLOWED_HOSTS', '127.0.0.1,localhost,spa-booking-django.onrender.com')
+
+# Hoặc nếu bạn muốn chắc chắn hơn:
+RENDER_EXTERNAL_HOSTNAME = os.getenv('RENDER_EXTERNAL_HOSTNAME')
+if RENDER_EXTERNAL_HOSTNAME:
+    ALLOWED_HOSTS.append(RENDER_EXTERNAL_HOSTNAME)
+
+CSRF_TRUSTED_ORIGINS = env_list('CSRF_TRUSTED_ORIGINS', 'https://spa-booking-django.onrender.com,http://127.0.0.1,http://localhost')
 
 
 # Application definition
