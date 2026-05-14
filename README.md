@@ -1,66 +1,93 @@
-# Spa Booking Django
+# Spa Booking Django — DevOps Project
 
-## Mô tả
-Website quản lý đặt lịch dịch vụ Spa/Salon bằng Django.
+Hệ thống đặt lịch spa đầy đủ theo hướng production: Backend API, Frontend (Django templates), Database, Docker, CI/CD và tài liệu debug theo layer.
 
-## Công nghệ sử dụng
-- Django
-- MySQL/MariaDB bằng XAMPP
-- HTML/CSS
+## 1) Kiến trúc hệ thống
 
-## Chức năng đã làm
-- Đăng ký / đăng nhập
-- Xem danh sách dịch vụ
-- Đặt lịch
-- Xem lịch hẹn cá nhân
-- Hủy lịch
+- Frontend: Django templates + static assets
+- Backend: Django + Django REST Framework
+- Database: MySQL 8
+- Reverse Proxy: Nginx
+- Runtime: Gunicorn
+- CI: GitHub Actions (lint, test, build)
+
+Chi tiết sơ đồ và luồng CI/CD: xem `docs/DEVOPS_PROJECT_REPORT.md`.
+
+## 2) Tính năng chính
+
+- Đăng ký/đăng nhập
+- Danh sách dịch vụ
+- Đặt lịch và quản lý lịch hẹn
 - Dashboard thống kê
-- Phân quyền admin
-## Tình trạng dự án
-- **CI/CD:** Đã tích hợp GitHub Actions (Lint, Test, Build) thành công.
-## Cách chạy project
+- API health check: `/api/health` và `/api/health/`
+
+## 3) Yêu cầu DevOps đã đáp ứng
+
+- Dockerfile (multi-stage) + `docker-compose.yml` + `docker-compose.prod.yml`
+- Có `.env.example` và `.env.production.example`
+- Không commit `.env`
+- GitHub Actions gồm `lint` + `test` + `build`
+- Trigger pipeline khi `push` và `pull_request`
+- Có tài liệu incident (>=3 lỗi) theo Layer Thinking
+
+## 4) Chạy local nhanh
+
 ```bash
-python -m venv venv
-venv\Scripts\activate
-pip install django pymysql pillow
+python -m venv .venv
+.venv\Scripts\activate
+pip install -r requirements.txt
+set DB_ENGINE=sqlite
 python manage.py migrate
 python manage.py runserver
 ```
 
-## Production (an toàn/ổn định)
+## 5) Chạy bằng Docker (demo bắt buộc)
 
-### 1. Chuẩn bị biến môi trường
-1. Tạo file `.env.production` từ `.env.example`.
-2. Bắt buộc đổi các giá trị:
-- `SECRET_KEY`
-- `DB_PASSWORD`
-- `DB_ROOT_PASSWORD`
-- `ALLOWED_HOSTS`
-- `CSRF_TRUSTED_ORIGINS`
-
-### 2. Chạy stack production với Docker Compose
+### Development stack
 ```bash
-docker compose -f docker-compose.prod.yml up --build -d
+docker compose up -d --build
+docker compose ps
+docker compose logs -f web
 ```
 
-### 3. Kiểm tra container
+### Production-like stack
 ```bash
+copy .env.production.example .env.production
+docker compose -f docker-compose.prod.yml up -d --build
 docker compose -f docker-compose.prod.yml ps
 docker compose -f docker-compose.prod.yml logs -f web
 docker compose -f docker-compose.prod.yml logs -f nginx
 ```
 
-### 4. Dừng hệ thống
+## 6) API test nhanh
+
 ```bash
-docker compose -f docker-compose.prod.yml down
+curl http://127.0.0.1:8000/api/health
 ```
 
-## Thành phần production
-- `web`: Django + Gunicorn
-- `db`: MySQL 8
-- `nginx`: reverse proxy, static/media serving
+Hoặc chạy script:
 
-## Ghi chú bảo mật
-- Không dùng `ALLOWED_HOSTS=*` trên môi trường production.
-- Luôn chạy HTTPS ở lớp ngoài (Cloudflare/Nginx TLS).
-- Không commit file `.env` chứa mật khẩu thật.
+```bash
+python test_api.py
+```
+
+## 7) CI/CD
+
+Workflow: `.github/workflows/django_ci.yml`
+
+Gồm 3 job:
+- `lint`: flake8
+- `test`: Django test + check
+- `build`: docker build + deploy sanity check
+
+## 8) Tài liệu đồ án
+
+- Báo cáo DevOps đầy đủ: `docs/DEVOPS_PROJECT_REPORT.md`
+- Incident report (3 sự cố): `docs/INCIDENT_REPORT.md`
+- Deployment/redeploy guide: `docs/DEPLOYMENT_GUIDE.md`
+
+## 9) Lưu ý bảo mật
+
+- Không dùng `ALLOWED_HOSTS=*` trên production.
+- Luôn đổi `SECRET_KEY`, `DB_PASSWORD`, `DB_ROOT_PASSWORD` trước deploy.
+- Không commit file `.env`, `.env.local`, `.env.production` chứa giá trị thật.

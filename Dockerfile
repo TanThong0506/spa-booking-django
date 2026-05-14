@@ -1,25 +1,43 @@
-# Sử dụng Python bản ổn định
-FROM python:3.12-slim
+FROM python:3.12-slim AS builder
 
-# Cài đặt các công cụ cần thiết cho MySQL và build
-RUN apt-get update && apt-get install -y \
+ENV PYTHONDONTWRITEBYTECODE=1 \
+    PYTHONUNBUFFERED=1
+
+RUN apt-get update && apt-get install -y --no-install-recommends \
     default-libmysqlclient-dev \
     build-essential \
     pkg-config \
     && rm -rf /var/lib/apt/lists/*
 
-# Thiết lập thư mục làm việc trong container
+WORKDIR /app
+COPY requirements.txt .
+RUN pip install --upgrade pip && \
+    pip wheel --no-cache-dir --wheel-dir /wheels -r requirements.txt
+
+
+FROM python:3.12-slim AS runtime
+
+ENV PYTHONDONTWRITEBYTECODE=1 \
+    PYTHONUNBUFFERED=1
+
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    default-libmysqlclient-dev \
+    && rm -rf /var/lib/apt/lists/*
+
+RUN useradd -m -u 10001 appuser
+
 WORKDIR /app
 
-# Copy file requirements và cài đặt thư viện
-COPY requirements.txt .
-RUN pip install --no-cache-dir -r requirements.txt
+COPY --from=builder /wheels /wheels
+RUN pip install --no-cache-dir --upgrade pip && \
+    pip install --no-cache-dir /wheels/*
 
-# Copy toàn bộ code vào container
 COPY . .
+RUN mkdir -p /app/staticfiles /app/media && \
+    chown -R appuser:appuser /app
 
-# Chạy lệnh thu thập tệp tĩnh (để đạt điểm phần Build)
-RUN python manage.py collectstatic --noinput
+USER appuser
 
-# Chạy ứng dụng bằng Gunicorn (chuẩn Production)
-CMD ["gunicorn", "--bind", "0.0.0.0:8000", "spa_booking.wsgi:application"]
+EXPOSE 8000
+
+CMD ["gunicorn", "--bind", "0.0.0.0:8000", "--workers", "3", "--timeout", "60", "spa_booking.wsgi:application"]
