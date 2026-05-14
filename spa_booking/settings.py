@@ -35,7 +35,7 @@ def env_list(key, default=''):
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = os.getenv('SECRET_KEY', 'django-insecure-dev-key')
 
-DEBUG = env_bool('DEBUG', False)
+DEBUG = env_bool('DEBUG', True)
 
 # settings.py
 
