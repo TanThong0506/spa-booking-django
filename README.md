@@ -95,6 +95,8 @@ Setup guide chi tiết: `docs/GITHUB_CD_SETUP.md`
 - Báo cáo DevOps đầy đủ: `docs/DEVOPS_PROJECT_REPORT.md`
 - Incident report (3 sự cố): `docs/INCIDENT_REPORT.md`
 - Deployment/redeploy guide: `docs/DEPLOYMENT_GUIDE.md`
+- **Render.com deployment (free cloud):** `docs/RENDER_DEPLOYMENT.md`
+- GitHub CD/Actions setup: `docs/GITHUB_CD_SETUP.md`
 
 ## 9) Lưu ý bảo mật
 

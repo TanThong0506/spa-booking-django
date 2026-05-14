@@ -1,0 +1,22 @@
+# Render.com deployment configuration
+
+services:
+  - type: web
+    name: spa-booking
+    env: docker
+    dockerfilePath: ./Dockerfile
+    autoDeploy: true
+    envVars:
+      - key: SECRET_KEY
+        fromDatabase:
+          name: default
+          property: DATABASE_URL
+      - key: DEBUG
+        value: "False"
+      - key: ENVIRONMENT
+        value: "production"
+
+databases:
+  - name: db
+    databaseName: spa_booking_db
+    user: spa_user
