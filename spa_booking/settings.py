@@ -81,6 +81,7 @@ INSTALLED_APPS = [
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
     'corsheaders.middleware.CorsMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -340,3 +341,12 @@ SPECTACULAR_SETTINGS = {
 
 # Giới hạn dung lượng file upload là 5MB để tránh treo Server (SRE Optimization)
 DATA_UPLOAD_MAX_MEMORY_SIZE = 5242880
+# Thêm đoạn này xuống tận cùng của file settings.py
+STORAGES = {
+    "default": {
+        "BACKEND": "django.core.files.storage.FileSystemStorage",
+    },
+    "staticfiles": {
+        "BACKEND": "whitenoise.storage.CompressedManifestStaticFilesStorage",
+    },
+}
