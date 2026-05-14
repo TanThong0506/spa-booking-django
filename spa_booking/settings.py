@@ -35,9 +35,14 @@ def env_list(key, default=''):
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = os.getenv('SECRET_KEY', 'django-insecure-dev-key')
 
-DEBUG = env_bool('DEBUG', True)
+DEBUG = env_bool('DEBUG', False)
 
-ALLOWED_HOSTS = env_list('ALLOWED_HOSTS', '127.0.0.1,localhost')
+ALLOWED_HOSTS = (
+    "127.0.0.1",
+    "localhost",
+    "spa-booking-django.onrender.com"
+)
+    
 
 CSRF_TRUSTED_ORIGINS = env_list('CSRF_TRUSTED_ORIGINS', 'http://127.0.0.1,http://localhost')
 
