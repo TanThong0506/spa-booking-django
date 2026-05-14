@@ -80,6 +80,17 @@ Gồm 3 job:
 - `test`: Django test + check
 - `build`: docker build + deploy sanity check
 
+CD workflow: `.github/workflows/cd_deploy.yml`
+
+- Chạy khi push vào `main`
+- Tạo bản ghi trong tab **Deployments** của GitHub (environment: `Production`)
+- Có thể gọi deploy hook (Render) nếu bạn cấu hình secret
+
+Thiết lập để hiển thị giống hình Deployments:
+1. Vào **Settings -> Secrets and variables -> Actions -> Variables**
+2. Tạo variable: `PRODUCTION_URL` = URL production của bạn
+3. (Tùy chọn) tạo secret: `RENDER_DEPLOY_HOOK_URL` để auto deploy Render
+
 ## 8) Tài liệu đồ án
 
 - Báo cáo DevOps đầy đủ: `docs/DEVOPS_PROJECT_REPORT.md`
